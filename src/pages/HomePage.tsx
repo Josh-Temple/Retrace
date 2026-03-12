@@ -10,7 +10,7 @@ export function HomePage() {
       <div className="space-y-2">
         <h2 className="text-2xl font-semibold">Train your working memory</h2>
         <p className="text-sm text-slate-300">
-          Retrace is a position-based 2-back trainer. Press Space key on desktop or use the match button on mobile.
+          Retrace (N-Back Trainer) is a position-based 2-back trainer. Press Space on desktop or use the Match button on mobile.
         </p>
       </div>
 

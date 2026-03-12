@@ -1,25 +1,38 @@
-import type { SessionResult, TrialRecord } from "./types";
+import type { SessionResult, TrialOutcome, TrialRecord } from "./types";
 
-export function createTrialRecord(args: {
+type TrialInput = {
   trialIndex: number;
   position: number;
   isTarget: boolean;
   userPressed: boolean;
   reactionTimeMs: number | null;
-}): TrialRecord {
-  const { trialIndex, position, isTarget, userPressed, reactionTimeMs } = args;
+};
 
+function determineOutcome(isTarget: boolean, userPressed: boolean): TrialOutcome {
   if (isTarget && userPressed) {
-    return { trialIndex, position, isTarget, userPressed, reactionTimeMs, outcome: "hit" };
+    return "hit";
   }
   if (isTarget && !userPressed) {
-    return { trialIndex, position, isTarget, userPressed, reactionTimeMs: null, outcome: "miss" };
+    return "miss";
   }
   if (!isTarget && userPressed) {
-    return { trialIndex, position, isTarget, userPressed, reactionTimeMs, outcome: "false_alarm" };
+    return "false_alarm";
   }
+  return "correct_rejection";
+}
 
-  return { trialIndex, position, isTarget, userPressed, reactionTimeMs: null, outcome: "correct_rejection" };
+export function createTrialRecord(args: TrialInput): TrialRecord {
+  const { trialIndex, position, isTarget, userPressed, reactionTimeMs } = args;
+  const outcome = determineOutcome(isTarget, userPressed);
+
+  return {
+    trialIndex,
+    position,
+    isTarget,
+    userPressed,
+    reactionTimeMs: userPressed ? reactionTimeMs : null,
+    outcome,
+  };
 }
 
 export function scoreSession(args: {
@@ -29,13 +42,14 @@ export function scoreSession(args: {
   trials: TrialRecord[];
 }): SessionResult {
   const { id, timestamp, config, trials } = args;
+
   let hits = 0;
   let misses = 0;
   let falseAlarms = 0;
   let correctRejections = 0;
   let targetTrials = 0;
-
-  const reactionTimes: number[] = [];
+  let reactionTimeTotal = 0;
+  let reactionTimeCount = 0;
 
   for (const trial of trials) {
     if (trial.isTarget) {
@@ -43,21 +57,29 @@ export function scoreSession(args: {
     }
 
     if (trial.reactionTimeMs !== null) {
-      reactionTimes.push(trial.reactionTimeMs);
+      reactionTimeTotal += trial.reactionTimeMs;
+      reactionTimeCount += 1;
     }
 
-    if (trial.outcome === "hit") hits += 1;
-    if (trial.outcome === "miss") misses += 1;
-    if (trial.outcome === "false_alarm") falseAlarms += 1;
-    if (trial.outcome === "correct_rejection") correctRejections += 1;
+    switch (trial.outcome) {
+      case "hit":
+        hits += 1;
+        break;
+      case "miss":
+        misses += 1;
+        break;
+      case "false_alarm":
+        falseAlarms += 1;
+        break;
+      case "correct_rejection":
+        correctRejections += 1;
+        break;
+    }
   }
 
   const totalTrials = trials.length;
   const accuracy = totalTrials === 0 ? 0 : (hits + correctRejections) / totalTrials;
-  const avgReactionTimeMs =
-    reactionTimes.length === 0
-      ? null
-      : reactionTimes.reduce((sum, value) => sum + value, 0) / reactionTimes.length;
+  const avgReactionTimeMs = reactionTimeCount === 0 ? null : reactionTimeTotal / reactionTimeCount;
 
   return {
     id,

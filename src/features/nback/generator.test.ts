@@ -29,4 +29,22 @@ describe("generateTrials", () => {
       }
     }
   });
+
+  it("supports deterministic generation with a custom random function", () => {
+    const sequence = [0.1, 0.6, 0.2, 0.8];
+    let cursor = 0;
+    const seededRandom = () => {
+      const value = sequence[cursor % sequence.length];
+      cursor += 1;
+      return value;
+    };
+
+    const trials = generateTrials(config, seededRandom);
+
+    expect(trials).toHaveLength(config.totalTrials);
+    expect(trials[0].position).toBe(0);
+    expect(trials[1].position).toBe(5);
+    expect(trials[2].isTarget).toBe(true);
+    expect(trials[2].position).toBe(trials[0].position);
+  });
 });

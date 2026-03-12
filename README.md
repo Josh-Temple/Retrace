@@ -1,16 +1,21 @@
 # Retrace
 
-Retrace is a personal N-back training web app.
-Current implementation includes a playable **position-based 2-back** session with local persistence and history view.
+**Retrace — N-Back Trainer** is a personal web app for position-based N-back practice.
+The current implementation focuses on a reliable **2-back MVP** before expanding into richer features.
 
-## Implemented scope
+## Minimum brand set
+
+- App name: `Retrace`
+- Subtitle: `N-Back Trainer`
+- Browser title: `Retrace — N-Back Trainer`
+- Repository name (recommended): `retrace`
+- localStorage key: `retrace_session_results` (with legacy read support for `nback_session_results`)
+
+## Implemented scope (MVP)
 
 - Position N-back (fixed `N=2`)
-- `25` trials per session
-- Trial timing:
-  - `stimulusDurationMs = 700`
-  - `interStimulusIntervalMs = 1800`
-- Input:
+- `25` trials per session with auto progression
+- Input support:
   - Desktop: `Space`
   - Mobile: on-screen `Match` button
 - Scoring:
@@ -18,12 +23,40 @@ Current implementation includes a playable **position-based 2-back** session wit
   - accuracy
   - average reaction time (pressed trials only)
 - Persistence:
-  - localStorage key: `nback_session_results`
+  - Local history saved to localStorage
 - Screens:
   - Home
   - Session
   - Result (with previous-session comparison)
   - History
+
+## Acceptance checklist (review baseline)
+
+### Functional correctness
+
+- [ ] 2-back session can be completed end-to-end
+- [ ] 25 trials run automatically
+- [ ] target / non-target judgments are correct
+- [ ] Space input works in session
+- [ ] Mobile Match button input works in session
+- [ ] Result screen is shown after session
+- [ ] Session history is saved and visible
+
+### Quality
+
+- [ ] No TypeScript errors
+- [ ] Build succeeds
+- [ ] Task logic is separated from UI (`generator` / `engine` / `scoring` / `storage`)
+- [ ] At least minimal unit tests exist for stimulus generation, scoring, and storage migration
+- [ ] README and HANDOFF are up to date
+
+## Review order for Codex deliverables
+
+1. README + HANDOFF consistency
+2. End-to-end app behavior
+3. N-back logic separation and correctness
+4. Tests
+5. UI polish
 
 ## Tech stack
 
@@ -41,7 +74,7 @@ npm install
 npm run dev
 ```
 
-## Quality checks
+## Checks
 
 ```bash
 npm run build
@@ -49,45 +82,26 @@ npm run lint
 npm run test
 ```
 
-## Vercel deployment
-
-This repository is prepared for Vercel deployment.
-
-### Option A: Import project from Git
-
-1. Push this repository to GitHub.
-2. In Vercel dashboard, click **Add New Project**.
-3. Import the repository.
-4. Framework preset should be detected as **Vite**.
-5. Deploy.
-
-### Option B: Vercel CLI
-
-```bash
-npm i -g vercel
-vercel
-vercel --prod
-```
-
 ## Architecture overview
 
-- `src/features/nback/generator.ts`: trial generation
-- `src/features/nback/scoring.ts`: outcome and scoring
+- `src/features/nback/generator.ts`: trial generation (supports injectable RNG for deterministic testing)
+- `src/features/nback/scoring.ts`: outcome and session metrics
 - `src/features/nback/useNBackSession.ts`: session flow/timing/input window
-- `src/features/nback/storage.ts`: localStorage persistence
+- `src/features/nback/storage.ts`: localStorage persistence and legacy key migration
+- `src/features/nback/storage.test.ts`: persistence/migration regression tests
 - `src/components/*`: reusable UI components
 - `src/pages/*`: route-level screens
 
-## Known limitations
+## Non-goals for this phase
 
-- No pause/resume control yet.
-- No adaptive difficulty.
-- No cloud sync or account system.
-- Session engine currently runs continuously once started.
+- Adaptive difficulty
+- Dual N-back
+- Audio stimuli
+- Cloud sync / account system
 
-## Future extension ideas
+## Suggested next steps
 
-- Add pause/resume and quit with partial-session handling.
-- Add deterministic seed mode for debugging and reproducible tests.
-- Add richer charts in history.
-- Add optional audio or dual N-back in a later release.
+- Add 1-back / 3-back selector and session settings
+- Improve history readability and trend comparison
+- Add deterministic seed mode for reproducible QA
+- Consider IndexedDB when trial-level data grows

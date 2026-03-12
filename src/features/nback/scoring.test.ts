@@ -25,4 +25,17 @@ describe("scoring", () => {
     expect(result.accuracy).toBe(0.5);
     expect(result.avgReactionTimeMs).toBe(450);
   });
+
+  it("normalizes reaction time to null when user did not press", () => {
+    const missedTarget = createTrialRecord({
+      trialIndex: 0,
+      position: 1,
+      isTarget: true,
+      userPressed: false,
+      reactionTimeMs: 321,
+    });
+
+    expect(missedTarget.outcome).toBe("miss");
+    expect(missedTarget.reactionTimeMs).toBeNull();
+  });
 });
