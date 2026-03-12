@@ -1,24 +1,45 @@
 import type { SessionConfig } from "./types";
 
+const GRID_CELLS = 9;
+
 export type GeneratedTrial = {
   trialIndex: number;
   position: number;
   isTarget: boolean;
 };
 
-function randomInt(maxExclusive: number): number {
-  return Math.floor(Math.random() * maxExclusive);
+function randomInt(maxExclusive: number, random: () => number): number {
+  return Math.floor(random() * maxExclusive);
 }
 
-function pickDifferentPosition(forbidden: number): number {
-  let next = randomInt(9);
+function pickDifferentPosition(forbidden: number, random: () => number): number {
+  let next = randomInt(GRID_CELLS, random);
   while (next === forbidden) {
-    next = randomInt(9);
+    next = randomInt(GRID_CELLS, random);
   }
   return next;
 }
 
-export function generateTrials(config: SessionConfig): GeneratedTrial[] {
+function shouldAssignTarget(args: {
+  remainingTrials: number;
+  remainingTargetBudget: number;
+  targetRate: number;
+  random: () => number;
+}): boolean {
+  const { remainingTrials, remainingTargetBudget, targetRate, random } = args;
+
+  if (remainingTargetBudget <= 0) {
+    return false;
+  }
+
+  if (remainingTargetBudget >= remainingTrials) {
+    return true;
+  }
+
+  return random() < targetRate;
+}
+
+export function generateTrials(config: SessionConfig, random: () => number = Math.random): GeneratedTrial[] {
   const { n, totalTrials, targetRate } = config;
   const trials: GeneratedTrial[] = [];
   const targetCount = Math.round(totalTrials * targetRate);
@@ -26,26 +47,29 @@ export function generateTrials(config: SessionConfig): GeneratedTrial[] {
 
   for (let trialIndex = 0; trialIndex < totalTrials; trialIndex += 1) {
     if (trialIndex < n) {
-      const position = randomInt(9);
-      trials.push({ trialIndex, position, isTarget: false });
+      trials.push({
+        trialIndex,
+        position: randomInt(GRID_CELLS, random),
+        isTarget: false,
+      });
       continue;
     }
 
     const remainingTrials = totalTrials - trialIndex;
     const remainingTargetBudget = targetCount - assignedTargets;
-    const mustAssignTarget = remainingTargetBudget >= remainingTrials;
-    const shouldTryTarget = mustAssignTarget || (remainingTargetBudget > 0 && Math.random() < targetRate);
-
     const nBackPosition = trials[trialIndex - n].position;
-    let isTarget = false;
-    let position: number;
 
-    if (shouldTryTarget) {
-      isTarget = true;
-      position = nBackPosition;
+    const isTarget = shouldAssignTarget({
+      remainingTrials,
+      remainingTargetBudget,
+      targetRate,
+      random,
+    });
+
+    const position = isTarget ? nBackPosition : pickDifferentPosition(nBackPosition, random);
+
+    if (isTarget) {
       assignedTargets += 1;
-    } else {
-      position = pickDifferentPosition(nBackPosition);
     }
 
     trials.push({ trialIndex, position, isTarget });

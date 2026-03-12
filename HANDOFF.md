@@ -1,34 +1,50 @@
 # HANDOFF
 
-## Session summary
+## Session objective
 
-This session addressed pending work from the previous scaffold and prepared Retrace for deployment on Vercel.
+Perform a focused refactor to improve maintainability and testability in core N-back logic, while preserving runtime behavior.
 
-## What was implemented
+## What changed in this session
 
-1. Added working N-back core modules:
-   - `generator.ts` for position sequence generation
-   - `scoring.ts` for trial outcomes and session metrics
-   - `useNBackSession.ts` for real-time trial flow and input handling
-2. Rewired pages from mock data to real data flow:
-   - Session now runs a real 2-back timeline and accepts Space/button input.
-   - Result page reads latest session and compares with the previous session.
-   - Home and History now read persisted data from localStorage.
-3. Added basic unit tests:
-   - `generator.test.ts`
-   - `scoring.test.ts`
-4. Added Vercel deployment config:
-   - `vercel.json` with Vite output and SPA rewrite.
-5. Added `.gitignore`.
-6. Updated README to reflect real functionality and Vercel deployment steps.
+1. **Generator refactor (`generator.ts`)**
+   - Extracted intent-revealing helper functions for random position selection and target assignment.
+   - Added optional injectable random source (`generateTrials(config, random?)`) for deterministic tests.
+   - Kept output shape and runtime behavior compatible with existing callers.
 
-## Constraints encountered
+2. **Scoring refactor (`scoring.ts`)**
+   - Centralized outcome derivation into `determineOutcome`.
+   - Simplified aggregate metric calculation with a clearer single-pass structure.
+   - Preserved scoring semantics for hit/miss/false alarm/correct rejection, accuracy, and average reaction time.
 
-- Dependency installation (`npm install`) is blocked in this environment by npm registry policy (HTTP 403), so build/lint/test could not be executed here.
+3. **Test coverage improvements**
+   - Expanded `generator.test.ts` with deterministic generation coverage using a custom random function.
+   - Expanded `scoring.test.ts` with reaction-time normalization behavior (non-press always stores `null`).
+   - Existing storage migration tests remain in place.
 
-## Recommended next tasks
+4. **Documentation sync**
+   - Updated README architecture note to reflect deterministic-test support in `generator.ts`.
 
-1. Run `npm install`, then execute `npm run build`, `npm run lint`, and `npm run test` in a network-enabled environment.
-2. Add pause/resume and explicit quit handling in the session engine.
-3. Improve history UX (sorting/filtering/empty-state guidance).
-4. Consider adding seeded random generation for deterministic QA.
+## Current known limitations
+
+- N-back level remains fixed at `N=2` in the UI.
+- Session settings (timing/N-level) are not user-configurable yet.
+- Persistence remains local-only.
+
+## Recommended next session tasks (priority order)
+
+1. Add integration tests for `useNBackSession` timing and one-input-per-trial behavior.
+2. Introduce configurable session settings (1/2/3-back and optional timing presets).
+3. Improve result/history readability and trend visualization.
+4. Evaluate when to retire legacy localStorage fallback logic.
+
+## Validation commands run in this session
+
+```bash
+npm run test
+npm run build
+npm run lint
+```
+
+## Notes for next handoff
+
+Keep `README.md`, `TASKS.md`, and `HANDOFF.md` aligned whenever behavior, priorities, or verification expectations change.

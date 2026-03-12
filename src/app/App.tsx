@@ -5,8 +5,11 @@ export function App() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <header className="border-b border-slate-800 px-4 py-4">
-        <div className="mx-auto flex max-w-5xl items-center justify-between">
-          <h1 className="text-xl font-semibold">Retrace</h1>
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
+          <div>
+            <h1 className="text-xl font-semibold">Retrace</h1>
+            <p className="text-xs uppercase tracking-wide text-slate-400">N-Back Trainer</p>
+          </div>
           <nav className="flex items-center gap-4 text-sm text-slate-300">
             <Link to="/">Home</Link>
             <Link to="/session">Session</Link>
