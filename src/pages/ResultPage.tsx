@@ -7,6 +7,7 @@ function loadLatestResultFromSession(): SessionResult | null {
   try {
     const raw = sessionStorage.getItem("latest_session_result");
     if (!raw) return null;
+
     return JSON.parse(raw) as SessionResult;
   } catch {
     return null;
@@ -37,19 +38,25 @@ export function ResultPage() {
       : null;
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-5 sm:space-y-6">
       <h2 className="text-2xl font-semibold">Result</h2>
+
       <ResultSummary result={latest} />
-      <p className="text-sm text-slate-300">
-        Compared to previous: accuracy {accuracyDelta === null ? "N/A" : `${accuracyDelta > 0 ? "+" : ""}${accuracyDelta}%`} ·
-        avg RT {rtDelta === null ? "N/A" : `${rtDelta > 0 ? "+" : ""}${rtDelta} ms`}
-      </p>
+
+      <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-300">
+        <p className="mb-2 font-medium text-slate-100">Compared to previous session</p>
+        <p>
+          Accuracy: {accuracyDelta === null ? "N/A" : `${accuracyDelta > 0 ? "+" : ""}${accuracyDelta}%`} · Avg RT: {" "}
+          {rtDelta === null ? "N/A" : `${rtDelta > 0 ? "+" : ""}${rtDelta} ms`}
+        </p>
+      </div>
+
       <div className="flex flex-wrap gap-3">
         <Link to="/session" className="rounded-lg bg-emerald-500 px-4 py-2 font-semibold text-slate-950">
           Retry
         </Link>
-        <Link to="/" className="rounded-lg border border-slate-700 px-4 py-2 text-slate-200">
-          Home
+        <Link to="/history" className="rounded-lg border border-slate-700 px-4 py-2 text-slate-200">
+          View History
         </Link>
       </div>
     </section>

@@ -2,16 +2,23 @@ import { Link } from "react-router-dom";
 import { ResultSummary } from "../components/ResultSummary";
 import { loadSessionResults } from "../features/nback/storage";
 
+const quickFacts = ["Position-based 2-back", "25 trials", "About 1 minute"];
+
 export function HomePage() {
   const latestSession = loadSessionResults()[0] ?? null;
 
   return (
-    <section className="space-y-6">
-      <div className="space-y-2">
+    <section className="space-y-5 sm:space-y-6">
+      <div className="space-y-3">
         <h2 className="text-2xl font-semibold">Train your working memory</h2>
-        <p className="text-sm text-slate-300">
-          Retrace (N-Back Trainer) is a position-based 2-back trainer. Press Space on desktop or use the Match button on mobile.
-        </p>
+        <div className="flex flex-wrap gap-2">
+          {quickFacts.map((fact) => (
+            <span key={fact} className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-xs text-slate-200">
+              {fact}
+            </span>
+          ))}
+        </div>
+        <p className="text-sm text-slate-300">Tap Match when the position matches 2 turns ago.</p>
       </div>
 
       <div className="flex flex-wrap gap-3">

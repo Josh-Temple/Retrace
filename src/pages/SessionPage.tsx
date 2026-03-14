@@ -36,15 +36,22 @@ export function SessionPage() {
   }, [registerPress]);
 
   return (
-    <section className="space-y-6">
-      <h2 className="text-2xl font-semibold">Session</h2>
-      <SessionHUD n={DEFAULT_SESSION_CONFIG.n} currentTrial={currentTrialNumber} totalTrials={DEFAULT_SESSION_CONFIG.totalTrials} />
-      <div className="flex flex-col items-center gap-6 rounded-xl border border-slate-800 bg-slate-900/50 p-6">
+    <section className="space-y-4 sm:space-y-6">
+      <SessionHUD
+        n={DEFAULT_SESSION_CONFIG.n}
+        currentTrial={currentTrialNumber}
+        totalTrials={DEFAULT_SESSION_CONFIG.totalTrials}
+      />
+
+      <div className="flex flex-col items-center gap-5 rounded-xl border border-slate-800 bg-slate-900/50 p-4 sm:gap-6 sm:p-6">
         <GridBoard activePosition={activePosition ?? -1} />
-        <MatchButton onPress={registerPress} />
+        <div className="w-full max-w-xs sm:max-w-sm">
+          <MatchButton onPress={registerPress} />
+        </div>
       </div>
-      <p className="text-sm text-slate-300">
-        Status: <span className="font-semibold text-slate-100">{status}</span>
+
+      <p className="text-xs text-slate-400 sm:text-sm">
+        Status: <span className="font-semibold text-slate-200">{status}</span>
       </p>
     </section>
   );

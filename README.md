@@ -17,7 +17,7 @@ The current implementation focuses on a reliable **2-back MVP** before expanding
 - `25` trials per session with auto progression
 - Input support:
   - Desktop: `Space`
-  - Mobile: on-screen `Match` button
+  - Mobile: on-screen `Match` button (keyboard hint hidden on small screens)
 - Scoring:
   - hit / miss / false alarm / correct rejection
   - accuracy
@@ -81,6 +81,14 @@ npm run build
 npm run lint
 npm run test
 ```
+
+
+## UX notes (current)
+
+- Mobile header is intentionally simplified to reduce crowding; during active session it only shows a lightweight Exit action.
+- Session HUD is compact (`2-back`, `Trial x / 25`, progress bar) so the grid remains the primary focal area.
+- Home presents first-run quick facts: position-based 2-back, 25 trials, ~1 minute, and a concise match instruction.
+- Result and history emphasize scan-friendly metrics to support repeated daily sessions.
 
 ## Architecture overview
 
