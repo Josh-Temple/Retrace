@@ -7,10 +7,10 @@ export function MatchButton({ onPress }: MatchButtonProps) {
     <button
       type="button"
       onClick={onPress}
-      className="w-full rounded-lg bg-emerald-500 px-4 py-3 font-semibold text-slate-950 transition hover:bg-emerald-400 active:scale-[0.99]"
+      className="w-full rounded-3xl bg-emerald-500 px-4 py-5 text-3xl font-semibold tracking-[0.04em] text-[#021015] transition hover:bg-emerald-400 active:scale-[0.99]"
     >
-      <span className="sm:hidden">Match</span>
-      <span className="hidden sm:inline">Match (Space)</span>
+      <span className="sm:hidden">MATCH</span>
+      <span className="hidden sm:inline">MATCH (SPACE)</span>
     </button>
   );
 }

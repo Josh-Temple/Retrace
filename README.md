@@ -85,10 +85,12 @@ npm run test
 
 ## UX notes (current)
 
-- Mobile header is intentionally simplified to reduce crowding; during active session it only shows a lightweight Exit action.
-- Session HUD is compact (`2-back`, `Trial x / 25`, progress bar) so the grid remains the primary focal area.
-- Home presents first-run quick facts: position-based 2-back, 25 trials, ~1 minute, and a concise match instruction.
-- Result and history emphasize scan-friendly metrics to support repeated daily sessions.
+- The app now uses a mobile-first, immersive dark layout inspired by the provided references.
+- Background surfaces are tuned to deep slate/indigo dark-theme tones (not pure black) to keep contrast crisp without harsh clipping.
+- Home emphasizes a large hero message, compact quick-fact chips, prominent primary/secondary actions, and a “Recent Activity” section.
+- Session header keeps focus with a minimal `Exit` action, enlarged `2-back` HUD text, and a subtle monochrome progress indicator.
+- The 3×3 grid and active cell styling now prioritize high contrast (light active tile with soft glow) against a quiet navy background.
+- Mobile includes a fixed bottom navigation bar (Home / History / Result) outside active session mode.
 
 ## Architecture overview
 

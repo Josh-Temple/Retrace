@@ -2,40 +2,24 @@
 
 ## Session objective
 
-Prioritize mobile UX/UI refinement so Retrace feels like a focused training app (not a dense small website), while preserving the existing 2-back MVP scope and architecture.
+Address review feedback from the previous UI overhaul by refining dark-theme background tones so the app is not perceived as pure black while keeping the same reference-aligned layout.
 
 ## What changed in this session
 
-1. **Header/navigation simplification for small screens**
-   - Refined app header hierarchy and styling.
-   - Desktop keeps full route nav.
-   - Mobile now shows compact key actions only.
-   - During active session on mobile, distracting nav is replaced by a simple `Exit` action.
+1. **Dark theme color tuning (non-pure-black)**
+   - Shifted core app background from near-black navy to a tighter deep slate/indigo (`#0b1120`).
+   - Applied the same base tone consistently to header and mobile bottom nav overlays.
+   - Updated global body background token to match the new baseline.
 
-2. **Session focus improvements**
-   - Reworked `SessionHUD` into a compact block: `2-back`, `Trial x / 25`, plus a slim progress bar.
-   - Reduced top-heavy session layout spacing so the stimulus grid appears higher and more central.
-   - Kept status info but de-emphasized it visually.
+2. **Session surface contrast rebalance**
+   - Lifted session panel background to a slightly brighter dark tone (`#0d1424`) so content layers remain distinct.
+   - Updated inactive grid tile fill to a deep but non-black tone (`#0c1526`) to avoid black clipping while preserving focus on the active tile.
 
-3. **Stimulus visibility update**
-   - Increased active cell salience with stronger contrast, subtle glow, and slight scale transition.
-   - Inactive cells now have quieter borders/fill for clearer figure-ground separation.
+3. **Home screen surface consistency**
+   - Updated dark secondary action surface to use the revised base tone for better consistency across pages.
 
-4. **Context-aware Match button labeling**
-   - Mobile label: `Match`.
-   - Desktop label: `Match (Space)`.
-
-5. **Home first-run clarity**
-   - Added compact quick-fact chips (position-based 2-back, 25 trials, about 1 minute).
-   - Added short instruction line for first-time understanding: tap Match when position matches 2 turns ago.
-
-6. **Result/History hierarchy polish for repeat usage**
-   - Result summary now spotlights accuracy as the lead metric.
-   - Previous-session comparison is framed as a dedicated helper card.
-   - History list entries now use compact metric chips for faster scanning.
-
-7. **Docs updated**
-   - README updated with current UX notes reflecting the mobile-focused behavior.
+4. **Documentation updates**
+   - README UX notes now explicitly mention that dark surfaces are tuned to non-pure-black tones.
 
 ## Scope guardrails preserved
 
@@ -55,9 +39,13 @@ npm run test
 npm run build
 ```
 
+## Screenshot artifacts
+
+- `browser:/tmp/codex_browser_invocations/8199b221950eb88d/artifacts/artifacts/home-ui-dark-tuned.png`
+- `browser:/tmp/codex_browser_invocations/8199b221950eb88d/artifacts/artifacts/session-ui-dark-tuned.png`
+
 ## Recommended next session tasks
 
-1. Add a tiny inline “focus mode” hint on session start (if usability testing suggests confusion around hidden mobile nav).
-2. Add light visual regression coverage for key mobile breakpoints.
-3. Re-evaluate contrast tokens with a11y tooling for stricter WCAG checks.
-4. Keep README/HANDOFF/TASKS aligned after any product wording or UX hierarchy changes.
+1. If desired, extract dark surface colors into semantic Tailwind tokens (e.g., `bg-app`, `bg-panel`, `bg-tile`) for easier iteration.
+2. Run contrast checks on text/icons over updated surfaces at mobile brightness levels.
+3. Add visual regression snapshots for dark-theme palette drift prevention.
