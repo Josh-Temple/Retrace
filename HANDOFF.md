@@ -2,49 +2,62 @@
 
 ## Session objective
 
-Perform a focused refactor to improve maintainability and testability in core N-back logic, while preserving runtime behavior.
+Prioritize mobile UX/UI refinement so Retrace feels like a focused training app (not a dense small website), while preserving the existing 2-back MVP scope and architecture.
 
 ## What changed in this session
 
-1. **Generator refactor (`generator.ts`)**
-   - Extracted intent-revealing helper functions for random position selection and target assignment.
-   - Added optional injectable random source (`generateTrials(config, random?)`) for deterministic tests.
-   - Kept output shape and runtime behavior compatible with existing callers.
+1. **Header/navigation simplification for small screens**
+   - Refined app header hierarchy and styling.
+   - Desktop keeps full route nav.
+   - Mobile now shows compact key actions only.
+   - During active session on mobile, distracting nav is replaced by a simple `Exit` action.
 
-2. **Scoring refactor (`scoring.ts`)**
-   - Centralized outcome derivation into `determineOutcome`.
-   - Simplified aggregate metric calculation with a clearer single-pass structure.
-   - Preserved scoring semantics for hit/miss/false alarm/correct rejection, accuracy, and average reaction time.
+2. **Session focus improvements**
+   - Reworked `SessionHUD` into a compact block: `2-back`, `Trial x / 25`, plus a slim progress bar.
+   - Reduced top-heavy session layout spacing so the stimulus grid appears higher and more central.
+   - Kept status info but de-emphasized it visually.
 
-3. **Test coverage improvements**
-   - Expanded `generator.test.ts` with deterministic generation coverage using a custom random function.
-   - Expanded `scoring.test.ts` with reaction-time normalization behavior (non-press always stores `null`).
-   - Existing storage migration tests remain in place.
+3. **Stimulus visibility update**
+   - Increased active cell salience with stronger contrast, subtle glow, and slight scale transition.
+   - Inactive cells now have quieter borders/fill for clearer figure-ground separation.
 
-4. **Documentation sync**
-   - Updated README architecture note to reflect deterministic-test support in `generator.ts`.
+4. **Context-aware Match button labeling**
+   - Mobile label: `Match`.
+   - Desktop label: `Match (Space)`.
 
-## Current known limitations
+5. **Home first-run clarity**
+   - Added compact quick-fact chips (position-based 2-back, 25 trials, about 1 minute).
+   - Added short instruction line for first-time understanding: tap Match when position matches 2 turns ago.
 
-- N-back level remains fixed at `N=2` in the UI.
-- Session settings (timing/N-level) are not user-configurable yet.
-- Persistence remains local-only.
+6. **Result/History hierarchy polish for repeat usage**
+   - Result summary now spotlights accuracy as the lead metric.
+   - Previous-session comparison is framed as a dedicated helper card.
+   - History list entries now use compact metric chips for faster scanning.
 
-## Recommended next session tasks (priority order)
+7. **Docs updated**
+   - README updated with current UX notes reflecting the mobile-focused behavior.
 
-1. Add integration tests for `useNBackSession` timing and one-input-per-trial behavior.
-2. Introduce configurable session settings (1/2/3-back and optional timing presets).
-3. Improve result/history readability and trend visualization.
-4. Evaluate when to retire legacy localStorage fallback logic.
+## Scope guardrails preserved
+
+- Still position-based 2-back only (`N=2`).
+- Still 25 trials per session.
+- Still local-only persistence.
+- Still Home / Session / Result / History routes.
+- Keyboard Space input preserved.
+- Mobile Match button preserved.
+- No backend/accounts/adaptive/audio/dual n-back/settings added.
 
 ## Validation commands run in this session
 
 ```bash
+npm run lint
 npm run test
 npm run build
-npm run lint
 ```
 
-## Notes for next handoff
+## Recommended next session tasks
 
-Keep `README.md`, `TASKS.md`, and `HANDOFF.md` aligned whenever behavior, priorities, or verification expectations change.
+1. Add a tiny inline “focus mode” hint on session start (if usability testing suggests confusion around hidden mobile nav).
+2. Add light visual regression coverage for key mobile breakpoints.
+3. Re-evaluate contrast tokens with a11y tooling for stricter WCAG checks.
+4. Keep README/HANDOFF/TASKS aligned after any product wording or UX hierarchy changes.
