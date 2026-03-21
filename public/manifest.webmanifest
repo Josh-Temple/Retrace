@@ -1,0 +1,19 @@
+{
+  "name": "Retrace \u2014 N-Back Trainer",
+  "short_name": "Retrace",
+  "description": "A position-based 2-back training app for quick focused working-memory sessions.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b1120",
+  "theme_color": "#0b1120",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
