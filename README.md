@@ -48,7 +48,7 @@ The current implementation focuses on a reliable **2-back MVP** before expanding
 - [ ] Build succeeds
 - [ ] Task logic is separated from UI (`generator` / `engine` / `scoring` / `storage`)
 - [ ] At least minimal unit tests exist for stimulus generation, scoring, and storage migration
-- [ ] README and HANDOFF are up to date
+- [x] README and HANDOFF are up to date
 
 ## Review order for Codex deliverables
 
@@ -65,6 +65,7 @@ The current implementation focuses on a reliable **2-back MVP** before expanding
 - Vite
 - Tailwind CSS
 - React Router
+- Web App Manifest + Service Worker
 - Vitest
 
 ## Local development
@@ -81,6 +82,12 @@ npm run build
 npm run lint
 npm run test
 ```
+
+## PWA support
+
+- Installable on supported browsers via `manifest.webmanifest` and text-based icon assets in `public/`.
+- Service worker registration is enabled in `src/main.tsx` and uses `public/sw.js` for basic app-shell/offline caching.
+- Includes standalone display mode, app theme color, manifest wiring, and SVG favicon metadata in `index.html`.
 
 
 ## UX notes (current)

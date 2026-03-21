@@ -2,34 +2,42 @@
 
 ## Session objective
 
-Address review feedback from the previous UI overhaul by refining dark-theme background tones so the app is not perceived as pure black while keeping the same reference-aligned layout.
+Adjust the initial PWA implementation so the pull request no longer includes binary assets, while preserving baseline PWA support.
 
 ## What changed in this session
 
-1. **Dark theme color tuning (non-pure-black)**
-   - Shifted core app background from near-black navy to a tighter deep slate/indigo (`#0b1120`).
-   - Applied the same base tone consistently to header and mobile bottom nav overlays.
-   - Updated global body background token to match the new baseline.
+1. **Binary assets removed from the PR**
+   - Removed the generated PNG install icons from `public/` because binary files cannot be included in this pull request.
+   - Kept the text-based `public/favicon.svg` asset and updated the manifest to reference the SVG icon only.
 
-2. **Session surface contrast rebalance**
-   - Lifted session panel background to a slightly brighter dark tone (`#0d1424`) so content layers remain distinct.
-   - Updated inactive grid tile fill to a deep but non-black tone (`#0c1526`) to avoid black clipping while preserving focus on the active tile.
+2. **PWA metadata aligned with text-only assets**
+   - Updated `public/manifest.webmanifest` to use the SVG icon entry instead of PNG icons.
+   - Removed the `apple-touch-icon` link from `index.html` because it previously pointed at a deleted PNG asset.
+   - Preserved the service worker registration and offline/app-shell caching behavior.
 
-3. **Home screen surface consistency**
-   - Updated dark secondary action surface to use the revised base tone for better consistency across pages.
+3. **Documentation refreshed**
+   - Updated `README.md` so the documented PWA support matches the text-only asset set now present in the repo.
 
-4. **Documentation updates**
-   - README UX notes now explicitly mention that dark surfaces are tuned to non-pure-black tones.
+## Current PWA status
 
-## Scope guardrails preserved
+- The app still has baseline PWA support through `manifest.webmanifest`, `src/main.tsx` service worker registration, and `public/sw.js` caching behavior.
+- The repository now contains only text-based PWA assets.
+- Because the PNG install icons were removed, install UX is more limited than the previous revision, especially for platforms that prefer raster icons such as iOS home-screen integration.
 
-- Still position-based 2-back only (`N=2`).
-- Still 25 trials per session.
-- Still local-only persistence.
-- Still Home / Session / Result / History routes.
-- Keyboard Space input preserved.
-- Mobile Match button preserved.
-- No backend/accounts/adaptive/audio/dual n-back/settings added.
+## Removed binary asset details
+
+The removed binary files were three generated PNG icons:
+
+1. `public/icon-180.png`
+2. `public/icon-192.png`
+3. `public/icon-512.png`
+
+They contained a simple rasterized version of the Retrace app icon:
+- a dark navy rounded-square background,
+- an inset panel,
+- a 3×3 grid motif inspired by the N-back board,
+- one highlighted light tile to represent the active cell,
+- and a small emerald accent dot near the bottom.
 
 ## Validation commands run in this session
 
@@ -39,13 +47,8 @@ npm run test
 npm run build
 ```
 
-## Screenshot artifacts
+## Notes / follow-up ideas
 
-- `browser:/tmp/codex_browser_invocations/8199b221950eb88d/artifacts/artifacts/home-ui-dark-tuned.png`
-- `browser:/tmp/codex_browser_invocations/8199b221950eb88d/artifacts/artifacts/session-ui-dark-tuned.png`
-
-## Recommended next session tasks
-
-1. If desired, extract dark surface colors into semantic Tailwind tokens (e.g., `bg-app`, `bg-panel`, `bg-tile`) for easier iteration.
-2. Run contrast checks on text/icons over updated surfaces at mobile brightness levels.
-3. Add visual regression snapshots for dark-theme palette drift prevention.
+1. If binary assets become allowed later, add hand-crafted PNG or maskable icons for broader install compatibility.
+2. Consider an explicit in-app install prompt using `beforeinstallprompt`.
+3. Add an offline banner or fallback UI so cached-mode usage is clearer.
