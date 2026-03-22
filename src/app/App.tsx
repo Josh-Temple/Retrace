@@ -5,6 +5,7 @@ import { AppRoutes } from "./routes";
 const navItems = [
   { label: "Home", to: "/" },
   { label: "Session", to: "/session" },
+  { label: "Settings", to: "/settings" },
   { label: "Result", to: "/result" },
   { label: "History", to: "/history" },
 ];
@@ -28,8 +29,8 @@ export function App() {
             </Link>
           ) : (
             <Link
-              to="/session"
-              aria-label="Start session"
+              to="/settings"
+              aria-label="Open settings"
               className="rounded-full border border-slate-700/70 p-2 text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
             >
               <GearIcon />

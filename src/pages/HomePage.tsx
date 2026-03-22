@@ -1,10 +1,15 @@
 import { Link } from "react-router-dom";
+import { loadSessionConfig } from "../features/nback/configStorage";
 import { loadSessionResults } from "../features/nback/storage";
-
-const quickFacts = ["2-back", "25 trials", "1 min"];
 
 export function HomePage() {
   const latestSession = loadSessionResults()[0] ?? null;
+  const sessionConfig = loadSessionConfig();
+  const quickFacts = [
+    `${sessionConfig.n}-back`,
+    `${sessionConfig.totalTrials} trials`,
+    `${Math.round((sessionConfig.totalTrials * (sessionConfig.stimulusDurationMs + sessionConfig.interStimulusIntervalMs)) / 1000)} sec`,
+  ];
 
   return (
     <section className="space-y-10">
@@ -23,7 +28,7 @@ export function HomePage() {
         </div>
 
         <p className="max-w-[30ch] text-2xl sm:text-4xl font-light leading-[1.35] text-slate-400">
-          Tap <span className="font-medium text-slate-200">Match</span> when the position matches 2 turns ago.
+          Tap <span className="font-medium text-slate-200">Match</span> when the position matches {sessionConfig.n} turns ago.
         </p>
       </div>
 
@@ -54,7 +59,7 @@ export function HomePage() {
         ) : (
           <div className="rounded-3xl border border-dashed border-slate-800 bg-slate-950/50 px-6 py-10 text-center">
             <p className="text-2xl sm:text-3xl font-light text-slate-300">No sessions yet.</p>
-            <p className="text-lg sm:text-2xl font-light text-slate-400">Start your first 2-back session.</p>
+            <p className="text-lg sm:text-2xl font-light text-slate-400">Start your first session with your saved settings.</p>
           </div>
         )}
       </section>

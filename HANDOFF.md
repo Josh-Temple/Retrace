@@ -2,42 +2,32 @@
 
 ## Session objective
 
-Adjust the initial PWA implementation so the pull request no longer includes binary assets, while preserving baseline PWA support.
+Remove the remaining trust-breaking UX/PWA inconsistencies and add the smallest real settings flow that matches the existing UI.
 
 ## What changed in this session
 
-1. **Binary assets removed from the PR**
-   - Removed the generated PNG install icons from `public/` because binary files cannot be included in this pull request.
-   - Kept the text-based `public/favicon.svg` asset and updated the manifest to reference the SVG icon only.
+1. **Settings now exist as a real route and destination**
+   - Added `src/pages/SettingsPage.tsx` and routed `/settings` through `src/app/routes.tsx`.
+   - Updated the top-right gear in `src/app/App.tsx` so it now opens settings instead of incorrectly starting a session.
+   - Kept the session header's simple `Exit` action untouched.
 
-2. **PWA metadata aligned with text-only assets**
-   - Updated `public/manifest.webmanifest` to use the SVG icon entry instead of PNG icons.
-   - Removed the `apple-touch-icon` link from `index.html` because it previously pointed at a deleted PNG asset.
-   - Preserved the service worker registration and offline/app-shell caching behavior.
+2. **Session config is now persisted locally**
+   - Added `src/features/nback/configStorage.ts` with `loadSessionConfig()`, `saveSessionConfig()`, and `resetSessionConfig()`.
+   - Stored config values are normalized before use so malformed localStorage data falls back safely to `DEFAULT_SESSION_CONFIG`.
+   - `src/pages/SessionPage.tsx` now reads the stored config instead of hardcoding defaults directly.
 
-3. **Documentation refreshed**
-   - Updated `README.md` so the documented PWA support matches the text-only asset set now present in the repo.
+3. **Minimal settings UI is wired into the current session flow**
+   - Settings exposes only the current MVP-safe controls: `N`, `totalTrials`, `stimulusDurationMs`, `interStimulusIntervalMs`, and `targetRate`.
+   - Added a primary `Start Session` action and a secondary `Reset Defaults` action.
+   - The page preserves the app's compact dark, mobile-first aesthetic rather than introducing a new visual pattern.
 
-## Current PWA status
+4. **PWA app-shell cache list now matches real assets**
+   - Updated `public/sw.js` to remove stale references to deleted PNG icons.
+   - Bumped the cache version so existing installs will refresh the corrected app-shell list.
 
-- The app still has baseline PWA support through `manifest.webmanifest`, `src/main.tsx` service worker registration, and `public/sw.js` caching behavior.
-- The repository now contains only text-based PWA assets.
-- Because the PNG install icons were removed, install UX is more limited than the previous revision, especially for platforms that prefer raster icons such as iOS home-screen integration.
-
-## Removed binary asset details
-
-The removed binary files were three generated PNG icons:
-
-1. `public/icon-180.png`
-2. `public/icon-192.png`
-3. `public/icon-512.png`
-
-They contained a simple rasterized version of the Retrace app icon:
-- a dark navy rounded-square background,
-- an inset panel,
-- a 3×3 grid motif inspired by the N-back board,
-- one highlighted light tile to represent the active cell,
-- and a small emerald accent dot near the bottom.
+5. **Docs and tests were refreshed**
+   - Updated `README.md` to reflect the new Settings screen, persisted config flow, and revised acceptance checklist language.
+   - Added `src/features/nback/configStorage.test.ts` for config load/save/reset and malformed-storage fallback behavior.
 
 ## Validation commands run in this session
 
@@ -47,8 +37,8 @@ npm run test
 npm run build
 ```
 
-## Notes / follow-up ideas
+## Follow-up ideas intentionally not addressed
 
-1. If binary assets become allowed later, add hand-crafted PNG or maskable icons for broader install compatibility.
-2. Consider an explicit in-app install prompt using `beforeinstallprompt`.
-3. Add an offline banner or fallback UI so cached-mode usage is clearer.
+1. Route the main home-page `Start Session` CTA through `/settings` if you want every run to pass through configuration first.
+2. Improve the history screen density with visible `n`, hit/miss/false-alarm breakdowns, or lightweight trend summaries.
+3. Consider registering the service worker only in production to reduce dev-cache surprises.

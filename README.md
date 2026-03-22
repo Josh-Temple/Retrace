@@ -1,7 +1,7 @@
 # Retrace
 
 **Retrace — N-Back Trainer** is a personal web app for position-based N-back practice.
-The current implementation focuses on a reliable **2-back MVP** before expanding into richer features.
+The current implementation focuses on a reliable **position-based MVP** before expanding into richer features.
 
 ## Minimum brand set
 
@@ -13,8 +13,9 @@ The current implementation focuses on a reliable **2-back MVP** before expanding
 
 ## Implemented scope (MVP)
 
-- Position N-back (fixed `N=2`)
-- `25` trials per session with auto progression
+- Position N-back with configurable `N=1 / 2 / 3`
+- Session settings for trial count, timing, and target rate with local persistence
+- Default session remains `25` trials with auto progression
 - Input support:
   - Desktop: `Space`
   - Mobile: on-screen `Match` button (keyboard hint hidden on small screens)
@@ -26,6 +27,7 @@ The current implementation focuses on a reliable **2-back MVP** before expanding
   - Local history saved to localStorage
 - Screens:
   - Home
+  - Settings
   - Session
   - Result (with previous-session comparison)
   - History
@@ -34,8 +36,9 @@ The current implementation focuses on a reliable **2-back MVP** before expanding
 
 ### Functional correctness
 
-- [ ] 2-back session can be completed end-to-end
-- [ ] 25 trials run automatically
+- [ ] Configurable session can be completed end-to-end
+- [ ] Stored settings are applied when a session starts
+- [ ] Default 25-trial session still runs automatically
 - [ ] target / non-target judgments are correct
 - [ ] Space input works in session
 - [ ] Mobile Match button input works in session
@@ -46,8 +49,8 @@ The current implementation focuses on a reliable **2-back MVP** before expanding
 
 - [ ] No TypeScript errors
 - [ ] Build succeeds
-- [ ] Task logic is separated from UI (`generator` / `engine` / `scoring` / `storage`)
-- [ ] At least minimal unit tests exist for stimulus generation, scoring, and storage migration
+- [ ] Task logic is separated from UI (`generator` / `scoring` / `useNBackSession` / `storage` / `configStorage`)
+- [ ] At least minimal unit tests exist for stimulus generation, scoring, storage migration, and config persistence
 - [x] README and HANDOFF are up to date
 
 ## Review order for Codex deliverables
@@ -85,8 +88,8 @@ npm run test
 
 ## PWA support
 
-- Installable on supported browsers via `manifest.webmanifest` and text-based icon assets in `public/`.
-- Service worker registration is enabled in `src/main.tsx` and uses `public/sw.js` for basic app-shell/offline caching.
+- Installable on supported browsers via `manifest.webmanifest` and the text-based `public/favicon.svg` icon asset.
+- Service worker registration is enabled in `src/main.tsx` and uses `public/sw.js` for basic app-shell/offline caching with only files that currently exist.
 - Includes standalone display mode, app theme color, manifest wiring, and SVG favicon metadata in `index.html`.
 
 
@@ -95,7 +98,7 @@ npm run test
 - The app now uses a mobile-first, immersive dark layout inspired by the provided references.
 - Background surfaces are tuned to deep slate/indigo dark-theme tones (not pure black) to keep contrast crisp without harsh clipping.
 - Home emphasizes a large hero message, compact quick-fact chips, prominent primary/secondary actions, and a “Recent Activity” section.
-- Session header keeps focus with a minimal `Exit` action, enlarged `2-back` HUD text, and a subtle monochrome progress indicator.
+- Session header keeps focus with a minimal `Exit` action, an enlarged N-back HUD, and a subtle monochrome progress indicator.
 - The 3×3 grid and active cell styling now prioritize high contrast (light active tile with soft glow) against a quiet navy background.
 - Mobile includes a fixed bottom navigation bar (Home / History / Result) outside active session mode.
 
@@ -104,7 +107,9 @@ npm run test
 - `src/features/nback/generator.ts`: trial generation (supports injectable RNG for deterministic testing)
 - `src/features/nback/scoring.ts`: outcome and session metrics
 - `src/features/nback/useNBackSession.ts`: session flow/timing/input window
-- `src/features/nback/storage.ts`: localStorage persistence and legacy key migration
+- `src/features/nback/configStorage.ts`: local session settings persistence, validation, and reset helpers
+- `src/features/nback/storage.ts`: localStorage persistence and legacy key migration for results
+- `src/features/nback/configStorage.test.ts`: config persistence/normalization regression tests
 - `src/features/nback/storage.test.ts`: persistence/migration regression tests
 - `src/components/*`: reusable UI components
 - `src/pages/*`: route-level screens
@@ -118,7 +123,7 @@ npm run test
 
 ## Suggested next steps
 
-- Add 1-back / 3-back selector and session settings
+- Improve settings affordances and validation feedback if tuning expands further
 - Improve history readability and trend comparison
 - Add deterministic seed mode for reproducible QA
 - Consider IndexedDB when trial-level data grows
