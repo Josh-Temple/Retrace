@@ -15,7 +15,7 @@ export function HistoryList({ sessions }: HistoryListProps) {
         <li key={session.id} className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 text-sm">
           <p className="font-medium text-slate-100">{new Date(session.timestamp).toLocaleString()}</p>
           <div className="mt-2 flex flex-wrap gap-2 text-xs">
-            <Chip label="2-back" />
+            <Chip label={`${session.config.n}-back`} />
             <Chip label={`${session.totalTrials} trials`} />
             <Chip label={`Accuracy ${Math.round(session.accuracy * 100)}%`} />
             <Chip
