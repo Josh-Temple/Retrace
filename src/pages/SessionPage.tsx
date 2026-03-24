@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GridBoard } from "../components/GridBoard";
 import { MatchButton } from "../components/MatchButton";
@@ -9,7 +9,7 @@ import { useNBackSession } from "../features/nback/useNBackSession";
 
 export function SessionPage() {
   const navigate = useNavigate();
-  const sessionConfig = loadSessionConfig();
+  const [sessionConfig] = useState(() => loadSessionConfig());
   const { status, activePosition, currentTrialNumber, result, start, registerPress } = useNBackSession(sessionConfig);
 
   useEffect(() => {
