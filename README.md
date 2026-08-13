@@ -3,6 +3,10 @@
 **Retrace — N-Back Trainer** is a personal web app for position-based N-back practice.
 The current implementation focuses on a reliable **position-based MVP** before expanding into richer features.
 
+## Deployment
+
+- Production: https://retrace-eta.vercel.app/
+
 ## Minimum brand set
 
 - App name: `Retrace`
